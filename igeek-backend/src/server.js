@@ -27,7 +27,7 @@ app.get('/api/posts/:id', getPostById);
 
 // Somente Sogeking com Token pode criar, editar ou excluir!
 app.post('/api/posts', authMiddleware, createPost);
-app.put('/api/posts/:id', authMiddleware, updatePost); // <--- Rota de Edição
+app.put('/api/posts/:id', authMiddleware, updatePost);
 app.delete('/api/posts/:id', authMiddleware, deletePost);
 
 // --- ROTAS DO FÓRUM / COMENTÁRIOS ---
@@ -37,5 +37,4 @@ app.post('/api/posts/:postId/comments', createComment);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor iGEEK rodando na porta ${PORT}`);
-  console.log(`🔒 Apenas o Sogeking possui autorização para criar ou editar análises.`);
 });
