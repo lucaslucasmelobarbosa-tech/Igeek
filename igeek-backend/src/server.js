@@ -11,7 +11,10 @@ dotenv.config();
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+
+// AUMENTANDO O LIMITE PARA SUPORTAR IMAGENS EM BASE64
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Rota de Teste
 app.get('/', (req, res) => {
