@@ -9,6 +9,7 @@ let posts = [
     pros: ["Animação espetacular", "Desenvolvimento de personagens", "Trilha sonora imersiva"],
     cons: ["Ritmo acelerado no episódio 4"],
     author: "Sogeking",
+    image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800",
     createdAt: new Date().toISOString()
   },
   {
@@ -21,6 +22,7 @@ let posts = [
     pros: ["Conceitos científicos fascinantes", "Trama imprevisível"],
     cons: ["Personagens levemente frios"],
     author: "Sogeking",
+    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800",
     createdAt: new Date().toISOString()
   }
 ];
@@ -37,7 +39,7 @@ export function getPostById(req, res) {
 }
 
 export function createPost(req, res) {
-  const { title, type, rating, synopsis, content, pros, cons } = req.body;
+  const { title, type, rating, synopsis, content, image } = req.body;
 
   if (!title || !type || !rating || !content) {
     return res.status(400).json({ error: "Preencha todos os campos obrigatórios." });
@@ -50,14 +52,38 @@ export function createPost(req, res) {
     rating: parseFloat(rating),
     synopsis: synopsis || "",
     content,
-    pros: pros || [],
-    cons: cons || [],
+    pros: [],
+    cons: [],
     author: "Sogeking",
+    image: image || "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800",
     createdAt: new Date().toISOString()
   };
 
   posts.unshift(newPost);
   return res.status(201).json({ message: "Análise publicada com sucesso pelo Sogeking!", post: newPost });
+}
+
+// NOVA FUNÇÃO: PERMITE EDITAR POSTAGENS
+export function updatePost(req, res) {
+  const { id } = req.params;
+  const { title, type, rating, synopsis, content, image } = req.body;
+
+  const postIndex = posts.findIndex(p => p.id === id);
+  if (postIndex === -1) {
+    return res.status(404).json({ error: "Análise não encontrada." });
+  }
+
+  posts[postIndex] = {
+    ...posts[postIndex],
+    title: title || posts[postIndex].title,
+    type: type || posts[postIndex].type,
+    rating: rating ? parseFloat(rating) : posts[postIndex].rating,
+    synopsis: synopsis !== undefined ? synopsis : posts[postIndex].synopsis,
+    content: content || posts[postIndex].content,
+    image: image || posts[postIndex].image
+  };
+
+  return res.json({ message: "Análise atualizada com sucesso!", post: posts[postIndex] });
 }
 
 export function deletePost(req, res) {
